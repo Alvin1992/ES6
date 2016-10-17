@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Destructuring</title>
+</head>
+<body>
+    <script>
+        // ES6允许按照一定模式，从数组和对象中提取值，对变量进行赋值，这被称为解构
+        /*var [a, b, c] = [1, 2, 3];
+        console.log(a);
+        console.log(b);
+        console.log(c);*/
+
+        /*let [foo, [[bar], baz]] = [1, [[2], 3]]
+        console.log(foo, bar, baz);
+
+        let [ , ,test] = ['1', '2', '3']
+        console.log(test);
+
+        let [head, ...tail] = [1,2,3,4]
+        console.log(head);
+        console.log(tail);
+
+        // 如果解构不成功，变量的值就等于undefined
+        let [x, y, z] = ['a']
+        console.log(x);
+        console.log(y);
+        console.log(z);*/
+
+        // 另一种情况是不完全解构，即等号左边的模式，只匹配一部分的等号右边的数组。这种情况下，解构依然可以成功。
+        /*let [x, y] = [1,2,3];
+        console.log(x);
+        console.log(y);
+        
+        let [a, [b], c] = [1, [2,3], 4];
+        console.log(a);
+        console.log(b);
+        console.log(c);*/
+
+        // 如果等号的右边不是数组（或者严格地说，不是可遍历的结构），那么将会报错。
+        /*let [foo] = 1;
+        console.log(foo); // 报错*/
+
+        // 只要某种数据结构具有Iterator接口，都可以采用数组形式的解构赋值。
+        // let,const,Set
+        // 下面代码中fibs是一个Generator函数，原生具有Iterator接口。解构赋值会依次从这个接口获取值。
+        /*function* fibs() {
+            var a = 0;
+            var b = 1;
+            while (true) {
+                yield a;
+                [a, b] = [b, a + b];
+            }
+        }
+
+        var [first, second, third, fourth, fifth, sixth] = fibs();
+        sixth // 5*/
+
+        // 解构赋值允许制定默认值
+        /*let [foo = true] = [];
+        console.log(foo);
+
+        [x, y = 'b'] = ['a'];
+        console.log(x);
+        console.log(y);
+
+        [a, b = 'y'] = ['x', undefined]
+        console.log(a);
+        console.log(b);*/
+
+        // ES6内部使用严格相等运算符（===），判断一个位置是否有值。所以，如果一个数组成员不严格等于undefined，默认值是不会生效的。
+        /*var [x = 1] = [undefined];
+        var [y = 1] = [null];
+        console.log(x);
+        console.log(y);*/
+
+
+        // 如果默认值是一个表达式，那么这个表达式是惰性求值的，即只有在用到的时候，才会求值。
+        /*function foobar() {
+            return 5;
+        }
+        let [x = foobar()] = [1];
+        console.log(x);*/
+
+        // 默认值可以引用解构赋值的其他变量，但该变量必须已经声明。
+        /*let [x = 1, y = x] = [];
+        console.log(x,y);
+
+        let [a = 1, b = a] = [2];
+        console.log(a,b);
+
+        let [o = 1, p = o] = [1,2];
+        console.log(o,p);
+
+        let [s = t, t = 1] = [];
+        console.log(s, t); // 报错*/
+
+        // 对象的解构与数组有一个重要的不同。
+        // 数组的元素是按次序排列的，变量的取值由它的位置决定；
+        // 而对象的属性没有次序，变量必须与属性同名，才能取到正确的值。
+        /*var {foo, bar} = {foo:'123', bar: '456'};
+        console.log(foo, bar);
+
+        // 如果变量名与属性名不一致，必须写成下面这样
+        var {foo: baz} = {foo: '123', bar: '4567'}
+        console.log(baz);*/
+
+        // 这实际上说明，对象的解构赋值是下面形式的简写
+        // var { foo: foo, bar: bar } = { foo: "aaa", bar: "bbb" };
+        // 对象的解构赋值的内部机制，是先找到同名属性，然后再赋给对应的变量。真正被赋值的是后者，而不是前者。
+
+        // 解构也可以用于嵌套结构的对象
+        /*var node = {
+            loc: {
+                start: {
+                    line: 1,
+                    column: 5
+                }
+            }
+        };
+
+        var { loc: { start: { line }} } = node;
+        // 上面代码中，只有line是变量，loc和start都是模式，不会被赋值。*/
+
+        // 对象的解构也可以指定默认值。
+        // 默认值生效的条件是，对象的属性值严格等于undefined。
+        /*let {x = 3} = {};
+        console.log(x);
+
+        var {a, b = 5} = {a: 1};
+        console.log(a,b);
+
+        var {s:t = 5} = {};
+        console.log(t);
+        
+        var {m:n = 5} = {m: 7};
+        console.log(n);
+
+        var {o = 3} = {o: undefined}
+        console.log(o);*/
+
+        // 如果解构失败，变量的值等于undefined。
+        /*let {foo} = {bar: 'baz'}
+        console.log(foo);*/
+
+        // 如果解构模式是嵌套的对象，而且子对象所在的父属性不存在，那么将会报错。
+        /*var {foo: {baz}} = {bar: 'bar'};
+        console.log(baz); // 报错*/
+
+        // 如果要将一个已经声明的变量用于解构赋值，必须非常小心。
+        /*var x;
+        {x} = {x:1}
+        console.log(x);*/
+        // 上面代码的写法会报错，因为JavaScript引擎会将{x}理解成一个代码块，从而发生语法错误。
+        // 只有不将大括号写在行首，避免JavaScript将其解释为代码块，才能解决这个问题。
+        /*var x;
+        ({x} = {x: 1})
+        console.log(x);*/
+
+        // 解构赋值允许，等号左边的模式之中，不放置任何变量名。因此，可以写出非常古怪的赋值表达式。
+        // 表达式虽然毫无意义，但是语法是合法的，可以执行。
+        /*({} = [true, false]);*/
+
+        // 对象的解构赋值，可以很方便地将现有对象的方法，赋值到某个变量。
+        // 将Math对象的对数、正弦、余弦三个方法，赋值到对应的变量上，使用起来就会方便很多。
+        /*let {log, sin, cos} = Math;
+        console.log(log(16));*/
+
+        // 由于数组本质是特殊的对象，因此可以对数组进行对象属性的解构。
+        /*var arr = [1,2,3];
+        var {'0': first, [arr.length-1]: last} = arr;
+        console.log(first);
+        console.log(last);*/
+
+        // 字符串也可以解构赋值
+        // 这是因为此时，字符串被转换成了一个类似数组的对象。
+        /*const [a, b, c, d, e] = 'hello';
+        console.log(a,b,c,d,e);*/
+
+        // 类似数组的对象都有一个length属性，因此还可以对这个属性解构赋值。
+        /*let {length: len} = 'hello'
+        console.log(len);*/
+
+        // 解构赋值时，如果等号右边是数值和布尔值，则会先转为对象。
+        // 数值和布尔值的包装对象都有toString属性，因此变量s都能取到值。
+        /*let {toString: s} = 123;
+        console.log(s === Number.prototype.toString);
+
+        let {toString: x} = true;
+        console.log(x === Boolean.prototype.toString);*/
+
+        // 解构赋值的规则是，只要等号右边的值不是对象，就先将其转为对象。
+        // 由于undefined和null无法转为对象，所以对它们进行解构赋值，都会报错。
+        /*let {prop: x} = undefined;
+        let {prop: y} = null;
+        console.log(x,y);*/
+
+        //
+
+
+    </script>
+</body>
+</html>
