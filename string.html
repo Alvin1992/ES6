@@ -142,13 +142,24 @@
     console.log('1'.repeat('3'));*/
 
     // ES7推出了字符串补全长度的功能。如果某个字符串不够指定长度，会在头部或尾部补全。padStart用于头部补全，padEnd用于尾部补全。
+    // 第一个参数用来指定字符串的最小长度，第二个参数是用来补全的字符串。
+    /*console.log('x'.padStart(5, 'ab'));
+    console.log('x'.padStart(4, 'ab'));
+
+    console.log('x'.padEnd(4, 'ab'));
+    console.log('x'.padEnd(5, 'ab'));*/
     // 如果原字符串的长度，等于或大于指定的最小长度，则返回原字符串。
+    /*console.log('xxx'.padStart(2, 'ab'));
+    console.log('xxx'.padEnd(2, 'ab'));*/
     // 如果用来补全的字符串与原字符串，两者的长度之和超过了指定的最小长度，则会截去超出位数的补全字符串。
     // 如果省略第二个参数，则会用空格补全长度。
+    /*console.log('z'.padStart(4));
+    console.log('z'.padEnd(4));*/
     // padStart的常见用途是为数值补全指定位数。
+    /*console.log('1'.padStart(10, '0'));*/
     // 另一个用途是提示字符串格式。
-    /*console.log('x'.padStart(4, 'ab'));
-    console.log('x', padEnd(5, 'ab'));*/
+    /*console.log('12'.padStart('YYYY-MM-DD'));
+    console.log('09-12'.padStart('YYYY-MM-DD'));*/
 
     // 模板字符串（template string）是增强版的字符串，用反引号（`）标识。
     // 它可以当作普通字符串使用，也可以用来定义多行字符串，或者在字符串中嵌入变量。
@@ -187,6 +198,76 @@
     /*let str = 'return ' + '`Hello ${name}!`';
     let func = new Function('name', str);
     console.log(func('Jack'));*/
+
+    // 标签模板（tagged template）
+    // 模板字符串可以紧跟在一个函数名后面，该函数将被调用来处理这个模板字符串
+    /*alert`123`;  // 等同于下面这种常规写法
+    alert(123);*/
+    // 标签模板其实不是模板，而是函数调用的一种特殊形式。“标签”指的就是函数，紧跟在后面的模板字符串就是它的参数。
+    // 如果模板字符里面有变量，就不是简单的调用了，而是会将模板字符串先处理成多个参数，再调用函数。
+    /*var a = 5;
+    var b = 10;
+
+    tag`Hello ${ a + b } world ${ a * b }`;  // 等同于下面
+    /!*tag(['Hello ', ' world ', ''], 15, 50);*!/
+    function tag(stringArr, value1, value2) {
+        console.log(stringArr);
+        console.log(value1);
+        console.log(value2);
+    }*/
+    // 等同于
+    /*function tag(stringArr, ...values) {
+
+    }*/
+    // tag函数的第一个参数是一个数组，该数组的成员是模板字符串中那些没有变量替换的部分，
+    // 也就是说，变量替换只发生在数组的第一个成员与第二个成员之间、第二个成员与第三个成员之间，以此类推。
+    // tag函数的其他参数，都是模板字符串各个变量被替换后的值。
+    // “标签模板”的一个重要应用，就是过滤HTML字符串，防止用户输入恶意内容。
+    /*var sender = '1234';
+    var message =
+            SaferHTML`<p>${sender} has sent you a message.</p>`;
+
+    function SaferHTML(templateData) {
+        var s = templateData[0];
+        for (var i = 1; i < arguments.length; i++) {
+            var arg = String(arguments[i]);
+
+            // Escape special characters in the substitution.
+            s += arg.replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;");
+
+            // Don't escape special characters in the template.
+            s += templateData[i];
+        }
+        return s;
+    }
+    console.log(message);*/
+
+    // 模板字符串本身并不能取代Mustache之类的模板库，因为没有条件判断和循环处理功能，但是通过标签函数，你可以自己添加这些功能。
+    // 模板处理函数的第一个参数（模板字符串数组），还有一个raw属性。
+    /*console.log`123`;*/ // console.log接受的参数，实际上是一个数组。该数组有一个raw属性，保存的是转义后的原字符串。
+
+    // String.raw() 是一个模板字符串的标签函数，它的作用类似于 Python 中的字符串前缀 r 和 C# 中的字符串前缀 @，
+    // 是用来获取一个模板字符串的原始字面量值的。
+    // String.raw() 是唯一一个内置的模板字符串标签函数，因为它太常用了。
+    /*String.raw `Hi\n!`;
+    // "Hi\\n!"，这里得到的不是 Hi 后面跟个换行符，而是跟着 \ 和 n 两个字符
+
+    console.log('Hi\u000A'.length);
+    let s = String.raw `Hi\u000A!`;
+    console.log(s.length);
+    // "Hi\\u000A!"，同上，这里得到的会是 \、u、0、0、0、A 6个字符，
+    // 任何类型的转义形式都会失效，保留原样输出，不信你试试.length
+
+    let name = "Bob";
+    String.raw `Hi\n${name}!`;
+    // "Hi\\nBob!"，内插表达式还可以正常运行
+
+    // String.raw方法也可以作为正常的函数使用。
+    // 这时，它的第一个参数，应该是一个具有raw属性的对象，且raw属性的值应该是一个数组。
+    String.raw({raw: "test"}, 0, 1, 2);
+    // "t0e1s2t"，我认为你通常不需要把它当成普通函数来调用*/
 
 </script>
 </body>
