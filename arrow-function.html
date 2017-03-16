@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>arrow function</title>
+</head>
+<body>
+    <script>
+        // 基本语法
+        // (param1, param2, …, paramN) => { statements }
+        let arr = [1,2,3];
+        // 如果是返回一个表达式，可以不写 return 和大括号
+        let result = arr.filter((value) => {
+            return value > 2;
+        });
+        let result1 = arr.filter((value) => value > 2);
+        console.log(result);
+        console.log(result1);
+
+        // 如果只有一个参数，圆括号是可选的:
+        let foo = arr.map(value => value*4);
+        console.log(foo);
+
+        // 无参数的函数需要使用圆括号:
+        let foobar = () => 5;
+        console.log(foobar());
+
+        // 返回对象字面量时应当用圆括号将其包起来:
+        let bar = () => ({a:1, b:2});
+        console.log('bar', bar());
+
+        // 支持 Rest parameters 和 default parameters:
+        let x = (a, b, ...rest) => {
+            console.log('rest的长度', rest.length);
+        };
+        x(1,2,3,4,5,6,7,8,9,0);
+
+        // 参数列表中的解构赋值也是被支持的
+        let y = ([a, b]) => a + b;
+        console.log(y([1,2]));
+
+        // 箭头函数的引入有两个方面的影响：一是更简短的函数书写，二是对 this 的词法解析。
+        // 箭头函数则会捕获其所在上下文的  this 值，作为自己的 this 值
+        function Person() {
+            this.age = 0;
+            setInterval(() => {
+                this.age++;  // |this| 正确地指向了 person 对象
+            }, 1000);
+        }
+        let p = new Person();
+
+        // this 是词法层面上的，严格模式中与 this 相关的规则都将被忽略
+        // this 已经在词法层面完成了绑定，
+        // 通过 call() 或 apply() 方法调用一个函数时，只是传入了参数而已，对 this 并没有什么影响
+
+        // 箭头函数不会在其内部暴露出  arguments 对象
+        // arguments 指向了箭头函数所在作用域的一个名为 arguments 的值
+        // 如果有的话，否则，就是未定义
+        let arguments = 42;
+        let z = () => arguments;
+        console.log('arguments', z());
+
+        // 箭头函数没有自己的 arguments 对象，不过在大多数情形下，rest参数可以给出一个解决方案
+        function test() {
+            var f = (...args) => args[0];
+            return f(5);
+        }
+        console.log(test());
+
+        // 箭头函数没有 this 绑定，所以在像方法那样使用箭头函数，this 的值和一般函数不一样
+        let obj = {
+            i: 10,
+            b: () => console.log(this.i, this),
+            c: function () {
+                console.log(this.i, this);
+            }
+        };
+        obj.b();
+        obj.c();
+
+        // 箭头函数不能用作构造器，和 new 一起用就会抛出错误
+        // yield 关键字通常不能在箭头函数中使用
+        // except when permitted within functions further nested within it
+        // 因此，箭头函数不能用作Generator函数。
+
+        // 箭头函数在参数和箭头之间不能换行
+
+        // 箭头函数的箭头不是操作符，相对于普通的函数它的解析规则和操作符优先级不一样
+        let callback;
+        callback = callback || function () {}; // ok
+        // callback = callback || () => {}; // SyntaxError: invalid arrow-function arguments
+        callback = callback || (()=>{}); // ok
+    </script>
+</body>
+</html>
