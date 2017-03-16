@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>rest params</title>
+</head>
+<body>
+    <script>
+        // 剩余参数（rest parameter）允许长度不确定的实参表示为一个数组
+        // 最后一个形参是以 ... 为前缀的，则在函数被调用时,
+        // 该形参会成为一个数组,数组中的元素都是传递给该函数的多出来的实参的值
+
+        // 剩余参数和 arguments 对象的区别
+        // 剩余参数只包含那些没有对应形参的实参，而 arguments 对象包含了传给函数的所有实参
+        // arguments 对象不是一个真实的数组,而剩余参数是真实的 Array实例
+        // arguments 对象对象还有一些附加的属性
+        function foobar(a, b, ...rest) {
+            console.log('rest params\' length', rest.length);
+        }
+        foobar(1,2,3,4,5,6,7,8,89,0,8,9);
+    </script>
+</body>
+</html>
