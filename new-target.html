@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>new target</title>
+</head>
+<body>
+    <script>
+        let foobar = function () {
+            console.log(new.target);
+        };
+        foobar(); // ==> undefined
+        
+        function Foo() {
+            if (!new.target) {
+                throw 'Foo() must be called with new';
+            } else {
+                console.log('Foo instantiated with new');
+                console.log(new.target);
+            }
+        }
+        // Foo();  // ==> uncaught exception: Foo() must be called with new
+        new Foo(); // ==> Foo instantiated with new  function Foo()
+    </script>
+</body>
+</html>
