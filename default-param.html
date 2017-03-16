@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>default param</title>
+</head>
+<body>
+    <script>
+        // 如果一个形参没有被传入对应的实参或者传入了undefined,则该形参会被赋一个默认值
+        // 在函数被调用时，参数默认值会被解析，每次函数调用时都会创建一个新的参数对象。
+        // 这个规则对于函数和变量也是适用的
+        function append(value, arr = []) {
+            arr.push(value);
+            return arr;
+        }
+        console.log(append(1));
+        console.log(append(2));
+
+        // 已经被声明的参数对于后面的默认参数是可见的
+        function addParams(x, y = x + 'yeah ', z = y + 'yep') {
+            return [x, y, z];
+        }
+        console.log(addParams('oh '));
+        console.log(addParams('oh ', 'fox '));
+
+        // 在函数体内的函数声明不能引用内部的默认参数
+        // 默认参数总是会被首先执行，而在函数体内部的函数声明会在之后生效
+        // 函数内定义的闭包对于默认参数是不能引用的
+        // 可使用解构赋值
+    </script>
+</body>
+</html>
