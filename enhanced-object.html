@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>enhanced object</title>
+</head>
+<body>
+    <script>
+        // 短属性名
+        let a = 'foo', b = 42, c = {};
+        let o = {a, b ,c};
+        console.log(o);
+
+        // 短方法名
+        let o2 = {
+            foo(x) {},
+            bar(y) {}
+        };
+        console.log(o2);
+
+        // 计算的属性名（支持表达式）
+        let foo = 'foo';
+        let o3 = {
+            [foo]: 'hey',
+            ['b' + 'ar']: 'there'
+        };
+        console.log(o3);
+    </script>
+</body>
+</html>
