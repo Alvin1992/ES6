@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>class</title>
+</head>
+<body>
+    <script>
+        // ECMAScript 2015 中引入的 JavaScript 类是 JavaScript 的现有基于原型的继承的语法糖
+        // 并不是新的面向对象的继承模型
+        // JavaScript 中的类只是能用更简洁明了的语法创建对象及处理相关的继承
+        // 类实际上是个“特殊的函数”，
+        // 而且正如函数的定义方式有函数声明和函数表达式两种一样，
+        // 类的定义方式也有两种，分别是：类声明和类表达式
+        class Polygon {
+            constructor(width, height) {
+                this.width = width;
+                this.height = height
+            }
+        }
+        console.log(Polygon);
+        // 类声明不会提升
+        // 需要先声明类，然后访问它
+
+        // 类表达式可以被命名或未被命名
+        // 赋予命名类表达式的名称是类的主体的本地名称
+        // 匿名类
+        let Polygon2 = class {
+            constructor(width, height) {
+                this.width = width;
+                this.height = height
+            }
+        };
+        // 命名类
+        let Polygon3 = class Polygon3{
+            constructor(width, height) {
+                this.width = width;
+                this.height = height
+            }
+        };
+
+        // 类体中的代码都强制在严格模式中执行
+        // 构造器方法是一个特殊的类方法，其用于创建和初始化对象（用该类生成的）
+        // 一个类只能拥有一个名为 constructor 的方法，否则会抛出 SyntaxError 异常
+        // 在子类的构造器中可以使用 super 关键字调用父类的构造器
+        // 原型方法
+        class Person {
+            constructor(name, age) {
+                this.name = name;
+                this.age = age;
+            }
+
+            get info() {
+                return this.sayInfo();
+            }
+
+            sayInfo() {
+                return ('name: '+ this.name + ' age: ' + this.age);
+            }
+        }
+        let xiaoming =  new Person('xiaoming', '24');
+        console.log(xiaoming.info);  // 执行 info 方法
+        console.log(xiaoming.sayInfo());  // 执行 sayInfo 方法
+        console.log(xiaoming.sayInfo);  // 返回函数
+
+        // 静态方法
+        // static 关键字用来定义类的静态方法
+        // 静态方法是指那些不需要对类进行实例化
+        // 使用类名就可以直接访问的方法
+        // 静态方法不能被实例化的对象调用
+        // 静态方法经常用来作为工具函数
+        class Point {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+            }
+
+            static distance(a, b) {
+                const dx = a.x - b.x;
+                const dy = a.y - b.y;
+
+                return Math.sqrt(dx*dx + dy*dy);
+            }
+        }
+        const p1 = new Point(5, 5);
+        const p2 = new Point(10, 10);
+        console.log(Point.distance(p1, p2));
+
+        // 当调用静态或原型方法而没有值为“this”的对象时
+        // (或“this”作为布尔，字符串，数字，未定义或null)
+        // 那么“this”值将在被调用的函数内部未定义
+        // 不会发生自动装箱
+        // 即使以非严格模式编写代码，行为也是一样的
+        // 传统的基于函数的类，那么基于调用该函数的“this”值将发生自动装箱
+        class Animal {
+            speak() {
+                return this
+            }
+            static eat() {
+                return this
+            }
+        }
+        let obj = new Animal();
+        console.log('obj speak', obj.speak()); // obj speak Object {  }
+        let speak = obj.speak;
+        console.log(speak()); // undefined
+        console.log(Animal.eat()); // function Animal()
+        let eat = Animal.eat;
+        console.log(eat());  // undefined
+
+        // extends 关键字在类声明或类表达式中用于创建一个类作为另一个类的一个子类
+        class Employee {
+            constructor(name) {
+                this.name = name;
+            }
+
+            salary() {
+                console.log('I work, I get money');
+            }
+        }
+
+        class Teacher extends Employee {
+            salary() {
+                console.log(`the salary of ${this.name} is high`);
+            }
+        }
+
+        let teacherLi = new Teacher('Li');
+        teacherLi.salary();
+        // 如果子类中存在构造函数，则需要在使用“this”之前首先调用 super()
+        // 可以扩展传统的基于函数的类
+        // 不能扩展常规（不可构造/非构造的）对象
+        // 如果要继承常规对象，可以改用Object.setPrototypeOf()
+
+        // super 关键字用于调用对象的父对象上的函数
+        class Cat {
+            constructor(name) {
+                this.name = name;
+            }
+            
+            speak() {
+                console.log(`${this.name} make some noise`);
+            }
+        }
+
+        class Lion extends Cat {
+            speak() {
+                super.speak();
+                console.log(`${this.name} roars`);
+            }
+        }
+        let simba = new Lion('Simba');
+        simba.speak();
+    </script>
+</body>
+</html>
