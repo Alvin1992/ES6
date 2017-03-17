@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>expand number</title>
+</head>
+<body>
+    <script>
+        // 二进制使用 0b （或 0B ）
+        console.log(0b111110111 === 503);
+        // 八进制使用 0o （或 0O ）
+        console.log(0o767 === 503);
+        // 如果要将 0b 和 0o 前缀的字符串数值转为十进制，要使用 Number 方法
+        console.log(Number(0b111110111));
+        console.log(Number(0o767));
+
+        // Number.isFinite() 用来检查一个数值是否为有限的（finite）
+        console.log(Number.isFinite(6));
+        console.log(Number.isFinite(Infinity));
+        // Number.isNaN() 用来检查一个值是否为NaN
+        console.log(Number.isNaN(NaN));
+        console.log(Number.isNaN(6));
+        // 与传统的全局方法 isFinite() 和 isNaN() 的区别在于
+        // 传统方法先调用 Number() 将非数值的值转为数值，再进行判断
+        // 而这两个新方法只对数值有效，非数值一律返回false
+
+        // ES6将全局方法parseInt()和parseFloat()，移植到Number对象上面，行为完全保持不变
+        // 这样做的目的，是逐步减少全局性方法，使得语言逐步模块化
+
+        // Number.isInteger()用来判断一个值是否为整数
+        // 在JavaScript内部，整数和浮点数是同样的储存方法，所以3和3.0被视为同一个值
+        console.group('isInteger');
+        console.log(Number.isInteger(25));
+        console.log(Number.isInteger(25.0));
+        console.log(Number.isInteger(25.1));
+        console.log(Number.isInteger('25'));
+        console.log(Number.isInteger(true));
+        console.groupEnd();
+
+        // ES6在Number 对象上面，新增一个极小的常量 Number.EPSILON
+        // Number.EPSILON 的实质是一个可以接受的误差范围
+        console.log(Number.EPSILON);
+        console.log(Number.EPSILON.toFixed(20));
+
+        // ES6引入了Number.MAX_SAFE_INTEGER和Number.MIN_SAFE_INTEGER这两个常量
+        // 用来表示这个范围的上下限
+
+    </script>
+</body>
+</html>
