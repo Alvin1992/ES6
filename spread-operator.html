@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>spread operator</title>
+</head>
+<body>
+    <script>
+        // 扩展语法允许在需要多个参数（用于函数调用）
+        // 或多个元素（用于数组文本）
+        // 或多个变量（用于解构分配）的位置扩展表达式
+        function myFunction(x, y, z) {
+            console.log(x, y, z);
+        }
+        let ars = [1,2,3];
+        // 需要使用数组作为函数的参数
+        // 更好的 apply
+        // 使用 Function.prototype.apply 方法
+        myFunction.apply(null, ars);
+        // 使用展开运算符
+        myFunction(...ars);
+        // 可以同时展开多个数组
+        function myOtherFunction(v, w, x, y, z) {
+            console.log(v,w,x,y,z);
+        }
+        let args = [0, 1];
+        myOtherFunction(-1, ...args, 2, ...[3]);
+
+        // 更强大的数组字面量
+        // 数组字面量中也可以使用...多次
+        let parts = ['shoulder', 'knees'];
+        let lyrics = ['head', ...parts, 'and', 'toes'];
+        console.log(lyrics);
+
+        // 更好的 push 方法
+        let arr1 = [0, 1, 2];
+        let arr2 = [3, 4, 5];
+        Array.prototype.push.apply(arr1, arr2);
+        console.log(arr1);
+
+        let arr3 = [4, 5, 6];
+        let arr4 = [7, 8, 9];
+        arr3.push(...arr4);
+        console.log(arr3);
+
+        // 仅可遍历对象(iterables)可用
+        let obj = {"key1": 'value1'};
+        function foobar(x) {
+            console.log(x);
+        }
+        // foobar(...obj);  // TypeError: obj is not iterable
+
+        // 将类数组对象转换成数组
+        let nodeList = document.querySelector('div');
+        let arr = [...nodeList];
+
+        // 在某种程度上，剩余元素和展开元素相反，
+        // 展开元素会“展开”数组变成多个元素，剩余元素会收集多个元素和“压缩”成一个单一的元素
+    </script>
+</body>
+</html>
