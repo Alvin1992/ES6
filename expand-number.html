@@ -44,7 +44,30 @@
 
         // ES6引入了Number.MAX_SAFE_INTEGER和Number.MIN_SAFE_INTEGER这两个常量
         // 用来表示这个范围的上下限
+        // Number.isSafeInteger()则是用来判断一个整数是否落在这个范围之内
+        // 验证运算结果是否落在安全整数的范围内，不要只验证运算结果，而要同时验证参与运算的每个值
+        console.log(Number.isSafeInteger(5));
 
+
+        // Math.trunc 方法用于去除一个数的小数部分，返回整数部分
+        // 对于非数值， Math.trunc 内部使用 Number 方法将其先转为数值
+        console.log(Math.trunc(4.5));
+        console.log(Math.trunc(-4.5));
+
+        // Math.sign方法用来判断一个数到底是正数、负数、还是零
+        // 参数为正数，返回+1；
+        // 参数为负数，返回-1；
+        // 参数为0，返回0；
+        // 参数为-0，返回-0;
+        // 其他值，返回NaN
+
+        // Math.cbrt方法用于计算一个数的立方根
+        // Math.hypot方法返回所有参数的平方和的平方根
+        // ES2016 新增了一个指数运算符（**）
+        // 在 V8 引擎中，指数运算符与Math.pow的实现不相同，对于特别大的运算结果，两者会有细微的差异
+        // 以作为 bug 提交，待修复
+        console.log(99**99);
+        console.log(Math.pow(99,99));
     </script>
 </body>
 </html>
