@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>map</title>
+</head>
+<body>
+    <script>
+        // ES6提供了Map数据结构
+        // 它类似于对象，也是键值对的集合，但是“键”的范围不限于字符串
+        // 各种类型的值（包括对象）都可以当作键
+        let m = new Map();
+        let o = { msg: 'Hello World' };
+        m.set(o, 'content');
+        console.log(m.get(o));
+        console.log(m.has(o));
+        console.log(m.delete(o));
+        console.log(m.has(o));
+        // 作为构造函数，Map也可以接受一个数组作为参数
+        // 该数组的成员是一个个表示键值对的数组
+        let m1 = new Map([
+            ['name', 'Alvin'],
+            ['age', 23]
+        ]);
+        console.log(m1);
+        // 对同一个键多次赋值，后面的值将覆盖前面的值
+        // 读取一个未知的键，则返回undefined
+        // 只有对同一个对象的引用，Map结构才将其视为同一个键
+        let m2 = new Map();
+        m2.set(['a'], 5555);
+        console.log(m2.get(['a']));  // undefined
+
+        let m3 = new Map();
+        m3.set('foo', 1)
+            .set('bar', 2)
+            .set('foobar', 3);
+        console.log(m3.size);
+        console.log(m3.has('foo'));
+        console.log(m3.delete('foobar'));
+        m3.clear();
+        console.log(m3);
+
+        // keys()：返回键名的遍历器
+        // values()：返回键值的遍历器
+        // entries()：返回所有成员的遍历器
+        // forEach()：遍历Map的所有成员
+
+
+        // 转为数组
+        let newMap = new Map().set('foo', 1).set('bar', 2);
+        console.log([...newMap]);
+        // 如果所有Map的键都是字符串，它可以转为对象
+        function strMapToObj(strMap) {
+            let obj = Object.create(null);
+            for (let [k,v] of strMap) {
+                obj[k] = v;
+            }
+            return obj;
+        }
+
+        let myMap = new Map().set('yes', true).set('no', false);
+        strMapToObj(myMap);
+        // Map转为JSON
+        // Map的键名都是字符串，这时可以选择转为对象JSON
+        function strMapToJson(strMap) {
+            return JSON.stringify(strMapToObj(strMap));
+        }
+        let myMap1 = new Map().set('yes', true).set('no', false);
+        strMapToJson(myMap1);
+        // Map的键名有非字符串，这时可以选择转为数组JSON
+        function mapToArrayJson(map) {
+            return JSON.stringify([...map]);
+        }
+        let myMap2 = new Map().set(true, 7).set({foo: 3}, ['abc']);
+        mapToArrayJson(myMap2);
+
+
+        // weakmap
+        // 只接受对象作为键名（null除外）
+        // 不接受其他类型的值作为键名
+        // 而且键名所指向的对象，不计入垃圾回收机制
+        // WeakMap的设计目的在于，键名是对象的弱引用（垃圾回收机制不将该引用考虑在内）
+        // 所以其所对应的对象可能会被自动回收
+        // 当对象被回收后，WeakMap自动移除对应的键值对
+        // 典型应用是，一个对应DOM元素的WeakMap结构
+        // 当某个DOM元素被清除，其所对应的WeakMap记录就会自动被移除
+        // WeakMap的专用场合就是，它的键所对应的对象，可能会在将来消失
+        // WeakMap结构有助于防止内存泄漏
+
+    </script>
+</body>
+</html>
