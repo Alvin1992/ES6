@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>proxy</title>
+</head>
+<body>
+    <script>
+        // Proxy 用于修改某些操作的默认行为，等同于在语言层面做出修改
+        // 所以属于一种“元编程”（meta programming），即对编程语言进行编程
+        // Proxy 可以理解成，在目标对象之前架设一层“拦截”
+        // 外界对该对象的访问，都必须先通过这层拦截
+        // 因此提供了一种机制，可以对外界的访问进行过滤和改写
+        // var proxy = new Proxy(target, handler)
+        // target参数表示所要拦截的目标对象，handler参数也是一个对象，用来定制拦截行为
+        let proxy = new Proxy({}, {
+            get (target, property) {
+                return 35;
+            }
+        });
+        console.log(proxy.name);
+        console.log(proxy.age);
+        // 如果handler没有设置任何拦截，那就等同于直接通向原对象
+
+
+        // get(target, propKey, receiver) 拦截对象属性的读取
+        // set(target, propKey, value, receiver) 拦截对象属性的设置， 返回一个布尔值
+        // has(target, propKey) 拦截propKey in proxy的操作，返回一个布尔值
+        // deleteProperty(target, propKey) 拦截delete proxy[propKey]的操作，返回一个布尔值
+        // apply(target, object, args) 拦截 Proxy 实例作为函数调用的操作
+        // 比如proxy(...args)、proxy.call(object, ...args)、proxy.apply(...)
+        // construct(target, args) 拦截 Proxy 实例作为构造函数调用的操作，比如new proxy(...args)
+    </script>
+</body>
+</html>
