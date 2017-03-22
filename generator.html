@@ -81,7 +81,51 @@
         // 如果想要第一次调用next方法时，就能够输入值，可以在Generator函数外面再包一层
 
 
-        // for...of循环
+        // for...of循环可以自动遍历Generator函数生成的Iterator对象，且此时不再需要调用next方法
+        // 一旦next方法的返回对象的done属性为true，for...of循环就会中止，且不包含该返回对象
+        function* demo1() {
+            yield 1;
+            yield 2;
+            yield 3;
+            yield 4;
+            yield 5;
+            return 6;
+        }
+        for (let v of demo1()) {
+            console.log(v);  // 1 2 3 4 5
+        }
+
+
+        // Generator函数返回的遍历器对象，都有一个throw方法
+        // 可以在函数体外抛出错误，然后在Generator函数体内捕获
+        // throw方法可以接受一个参数，该参数会被catch语句接收，建议抛出Error对象的实例
+        // 如果Generator函数内部没有部署try...catch代码块
+        // 那么throw方法抛出的错误，将被外部try...catch代码块捕获
+        // 如果Generator函数内部和外部，都没有部署try...catch代码块，那么程序将报错，直接中断执行
+        // throw方法被捕获以后，会附带执行下一条yield语句。也就是说，会附带执行一次next方法
+        // 只要Generator函数内部部署了try...catch代码块，那么遍历器的throw方法抛出的错误，不影响下一次遍历
+        // 一旦Generator执行过程中抛出错误，且没有被内部捕获，就不会再执行下去了
+        // 如果此后还调用next方法，将返回一个value属性等于undefined、done属性等于true的对象
+        // 即JavaScript引擎认为这个Generator已经运行结束了
+
+
+        // Generator函数返回的遍历器对象，还有一个return方法，可以返回给定的值，并且终结遍历Generator函数
+        // 如果return方法调用时，不提供参数，则返回值的value属性为undefined
+        function* demo2() {
+            yield 1;
+            yield 2;
+            yield 3;
+            yield 4;
+        }
+        let myDemo = demo2();
+        console.log(myDemo.next());
+        console.log(myDemo.return('foo'));  // { value: "foo", done: true }
+        console.log(myDemo.next());
+        // 如果Generator函数内部有try...finally代码块，那么return方法会推迟到finally代码块执行完再执行
+        function* demo3() {
+            yield 1;
+
+        }
     </script>
 </body>
 </html>
