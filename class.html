@@ -39,9 +39,20 @@
             }
         };
 
-        // 类体中的代码都强制在严格模式中执行
+        // 类和模块的内部，默认就是严格模式，所以不需要使用use strict指定运行模式
+        // 只要你的代码写在类或模块之中，就只有严格模式可用
+        // 类的内部所有定义的方法，都是不可枚举的（non-enumerable）
+        // constructor方法是类的默认方法，通过new命令生成对象实例时，自动调用该方法
+        // 一个类必须有constructor方法，如果没有显式定义，一个空的constructor方法会被默认添加
         // 构造器方法是一个特殊的类方法，其用于创建和初始化对象（用该类生成的）
         // 一个类只能拥有一个名为 constructor 的方法，否则会抛出 SyntaxError 异常
+        // constructor方法默认返回实例对象（即this），完全可以指定返回另外一个对象
+        /*class Foo {
+            constructor() {
+                return Object.create(null);
+            }
+        }
+        new Foo() instanceof Foo  // false*/
         // 在子类的构造器中可以使用 super 关键字调用父类的构造器
         // 原型方法
         class Person {
@@ -86,27 +97,60 @@
         const p2 = new Point(10, 10);
         console.log(Point.distance(p1, p2));
 
-        // 当调用静态或原型方法而没有值为“this”的对象时
-        // (或“this”作为布尔，字符串，数字，未定义或null)
-        // 那么“this”值将在被调用的函数内部未定义
-        // 不会发生自动装箱
-        // 即使以非严格模式编写代码，行为也是一样的
-        // 传统的基于函数的类，那么基于调用该函数的“this”值将发生自动装箱
-        class Animal {
-            speak() {
-                return this
+        // 类的方法内部如果含有this，它默认指向类的实例
+        // 但是，如果将这个方法提取出来单独使用，this会指向该方法运行时所在的环境
+        /*class Logger {
+            printName(name = 'there') {
+                this.print(`Hello ${name}`);
             }
-            static eat() {
-                return this
+
+            print(text) {
+                console.log(text);
             }
         }
-        let obj = new Animal();
-        console.log('obj speak', obj.speak()); // obj speak Object {  }
-        let speak = obj.speak;
-        console.log(speak()); // undefined
-        console.log(Animal.eat()); // function Animal()
-        let eat = Animal.eat;
-        console.log(eat());  // undefined
+
+        const logger = new Logger();
+        const { printName } = logger;
+        printName(); // TypeError: Cannot read property 'print' of undefined*/
+        // 一个比较简单的解决方法是，在构造方法中绑定this
+        /*class Logger {
+            constructor() {
+                this.printName = this.printName.bind(this);
+            }
+
+            // ...
+        }*/
+        // 另一种解决方法是使用箭头函数
+        /*class Logger {
+            constructor() {
+                this.printName = (name = 'there') => {
+                    this.print(`Hello ${name}`);
+                };
+            }
+
+            // ...
+        }*/
+        // 还有一种解决方法是使用Proxy，获取方法的时候，自动绑定this
+        /*function selfish (target) {
+            const cache = new WeakMap();
+            const handler = {
+                get (target, key) {
+                    const value = Reflect.get(target, key);
+                    if (typeof value !== 'function') {
+                        return value;
+                    }
+                    if (!cache.has(value)) {
+                        cache.set(value, value.bind(target));
+                    }
+                    return cache.get(value);
+                }
+            };
+            const proxy = new Proxy(target, handler);
+            return proxy;
+        }
+
+        const logger = selfish(new Logger());*/
+
 
         // extends 关键字在类声明或类表达式中用于创建一个类作为另一个类的一个子类
         class Employee {
