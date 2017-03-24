@@ -103,6 +103,87 @@
 
         // 等同于
         import { foo, bar } from 'my_module';*/
+
+        // 模块的整体加载
+        // 用星号（*）指定一个对象，所有输出值都加载在这个对象上面
+        // import * as circle from './circle';
+        // 模块整体加载所在的那个对象（上例是circle），应该是可以静态分析的，所以不允许运行时改变
+        /*// 下面两行都是不允许的
+        circle.foo = 'hello';
+        circle.area = function () {};*/
+
+
+        // export default命令，为模块指定默认输出
+        /*export default function () {
+            console.log('foo');
+        }
+        import customName from './export-default';
+        customName(); // 'foo'*/
+        // 这时import命令后面，不使用大括号
+        // 一个模块只能有一个默认输出，因此export default命令只能使用一次
+        // 所以，import命令后面才不用加大括号，因为只可能对应一个方法
+        // 本质上，export default就是输出一个叫做default的变量或方法，然后系统允许你为它取任意名字
+        // 可以直接将一个值写在export default之后
+        // 如果想在一条import语句中，同时输入默认方法和其他变量，可以写成下面这样
+        // import _, { each } from 'lodash';
+
+
+        // 如果在一个模块之中，先输入后输出同一个模块，import语句可以与export语句写在一起
+        /*export { foo, bar } from 'my_module';
+        // 等同于
+        import { foo, bar } from 'my_module';
+        export { foo, bar };*/
+
+
+        // 模块之间也可以继承
+        /*export * from 'circle';
+        export var e = 2.71828182846;
+        export default function(x) {
+            return Math.exp(x);
+        }*/
+        // export *，表示再输出circle模块的所有属性和方法
+        // export *命令会忽略circle模块的default方法
+        // 然后，上面代码又输出了自定义的e变量和默认方法
+
+
+        // const声明的常量只在当前代码块有效
+        // 如果想设置跨模块的常量（即跨多个文件），或者说一个值要被多个模块共享，可以采用下面的写法
+        /*// constants.js 模块
+        export const A = 1;
+        export const B = 3;
+        export const C = 4;
+
+        // test1.js 模块
+        import * as constants from './constants';
+        console.log(constants.A); // 1
+        console.log(constants.B); // 3
+
+        // test2.js 模块
+        import {A, B} from './constants';
+        console.log(A); // 1
+        console.log(B); // 3*/
+        // 如果要使用的常量非常多，可以建一个专门的constants目录，将各种常量写在不同的文件里面，保存在该目录下
+
+        /*// constants/db.js
+        export const db = {
+            url: 'http://my.couchdbserver.local:5984',
+            admin_username: 'admin',
+            admin_password: 'admin password'
+        };
+
+        // constants/user.js
+        export const users = ['root', 'admin', 'staff', 'ceo', 'chief', 'moderator'];*/
+        // 然后，将这些文件输出的常量，合并在index.js里面
+
+        /*// constants/index.js
+        export {db} from './db';
+        export {users} from './users';*/
+
+        // 使用的时候，直接加载index.js就可以了
+
+        /*// script.js
+        import {db, users} from './constants';*/
+
     </script>
 </body>
 </html>
