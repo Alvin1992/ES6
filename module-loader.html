@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>module loader</title>
+</head>
+<body>
+    <script>
+        // defer与async的区别是：
+        // 前者要等到整个页面正常渲染结束，才会执行；
+        // 后者一旦下载完，渲染引擎就会中断渲染，执行这个脚本以后，再继续渲染
+        // 一句话，defer是“渲染完再执行”，async是“下载完就执行”
+        // 另外，如果有多个defer脚本，会按照它们在页面出现的顺序加载，而多个async脚本是不能保证加载顺序的
+
+
+        // 浏览器加载 ES6 模块，使用<script>标签，但是要加入type="module"属性
+        // 浏览器对于带有type="module"的<script>，都是异步加载，不会造成堵塞浏览器
+        // 即等到整个页面渲染完，再执行模块脚本，等同于打开了<script>标签的defer属性
+        // <script>标签的async属性也可以打开
+        // ES6 模块也允许内嵌在网页中，语法行为与加载外部脚本完全一致
+        //<script type="module">
+            //import utils from "./utils.js";
+            // other code
+        //<\/script>
+        // 加载外部的模块脚本的注意事项：
+        // 1. 代码是在模块作用域之中运行，而不是在全局作用域运行。模块内部的顶层变量，外部不可见
+        // 2. 模块脚本自动采用严格模式，不管有没有声明use strict
+        // 3. 模块之中，可以使用import命令加载其他模块（.js后缀不可省略，需要提供绝对 URL 或相对 URL）
+        // 也可以使用export命令输出对外接口
+        // 4. 模块之中，顶层的this关键字返回undefined，而不是指向window。也就是说，在模块顶层使用this关键字，是无意义的
+        // 5. 同一个模块如果加载多次，将只执行一次
+
+        // 利用顶层的this等于undefined这个语法点，可以侦测当前代码是否在 ES6 模块之中
+        // const isNotModuleScript = this !== undefined;
+
+
+        // ES6 模块和 commonJS 的差异
+        // 1. CommonJS 模块输出的是一个值的拷贝，ES6 模块输出的是值的引用
+        // 2. CommonJS 模块是运行时加载，ES6 模块是编译时输出接口
+        // 3. ES6 模块之中，顶层的this指向undefined；CommonJS 模块的顶层this指向当前模块
+
+
+        // Node加载 ES6 模块
+        // Node 对 ES6 模块的处理比较麻烦，因为它有自己的 CommonJS 模块格式，与 ES6 模块格式是不兼容的
+        // 目前的解决方案是，将两者分开，ES6 模块和 CommonJS 采用各自的加载方案
+        // 在静态分析阶段，一个模块脚本只要有一行import或export语句
+        // Node 就会认为该脚本为 ES6 模块，否则就为 CommonJS 模块
+        // 如果不输出任何接口，但是希望被 Node 认为是 ES6 模块，可以在脚本中加一行语句
+        // export {};
+        // 如果不指定绝对路径，Node 加载 ES6 模块会依次寻找，与require()的规则一致
+        // Node 采用 CommonJS 模块格式，模块的输出都定义在module.exports这个属性上面
+        // 在 Node 环境中，使用import命令加载 CommonJS 模块
+        // Node 会自动将module.exports属性，当作模块的默认输出，即等同于export default
+        // CommonJS 模块的输出缓存机制，在 ES6 加载方式下依然有效
+
+        // 采用require命令加载 ES6 模块时，ES6 模块的所有输出接口，会成为输入对象的属性
+
+        // CommonJS模块的加载原理
+        // CommonJS的一个模块，就是一个脚本文件
+        // require命令第一次加载该脚本，就会执行整个脚本，然后在内存生成一个对象
+        /*{
+            id: '...',
+            exports: { ... },
+            loaded: true,
+        ...
+        }*/
+        // 该对象的id属性是模块名，exports属性是模块输出的各个接口
+        // loaded属性是一个布尔值，表示该模块的脚本是否执行完毕（除上述意外还有其他属性）
+        // 以后需要用到这个模块的时候，就会到exports属性上面取值
+        // 即使再次执行require命令，也不会再次执行该模块，而是到缓存之中取值
+
+
+        // “循环加载”（circular dependency）指的是，a脚本的执行依赖b脚本，而b脚本的执行又依赖a脚本
+        // 通常，“循环加载”表示存在强耦合，如果处理不好，还可能导致递归加载，使得程序无法执行，因此应该避免出现
+
+        // commonJS 一旦出现某个模块被"循环加载"，就只输出已经执行的部分，还未执行的部分不会输出
+
+        // 如果使用import从一个模块加载变量（即import foo from 'foo'）
+        // 那些变量不会被缓存，而是成为一个指向被加载模块的引用，需要开发者自己保证，真正取值的时候能够取到值
+
+
+    </script>
+</body>
+</html>
